@@ -1,0 +1,60 @@
+from collections import deque
+print(("lokesh 192211069"))
+
+# Initial state: (M_left, C_left, Boat_side)
+# Goal: (0, 0, 0)
+
+def is_valid(m, c):
+    return (m == 0 or m >= c) and (m <= 3 and c <= 3)
+
+def get_successors(state):
+    m, c, boat = state
+    moves = [(1,0), (2,0), (0,1), (0,2), (1,1)]
+    successors = []
+
+    for mm, cc in moves:
+        if boat == 1:  # Boat on left side
+            new_m, new_c = m - mm, c - cc
+            new_boat = 0
+        else:  # Boat on right side
+            new_m, new_c = m + mm, c + cc
+            new_boat = 1
+
+        m_right = 3 - new_m
+        c_right = 3 - new_c
+
+        if 0 <= new_m <= 3 and 0 <= new_c <= 3:
+            if is_valid(new_m, new_c) and is_valid(m_right, c_right):
+                successors.append((new_m, new_c, new_boat))
+
+    return successors
+
+def bfs():
+    start = (3, 3, 1)
+    goal = (0, 0, 0)
+    visited = set()
+    queue = deque([(start, [start])])
+
+    while queue:
+        state, path = queue.popleft()
+        if state == goal:
+            return path
+        if state in visited:
+            continue
+        visited.add(state)
+
+        for next_state in get_successors(state):
+            queue.append((next_state, path + [next_state]))
+
+    return None
+
+# Run the solver
+solution = bfs()
+
+# Display solution
+if solution:
+    print("Steps to solve the Missionaries and Cannibals problem:")
+    for step in solution:
+        print(f"Left(M={step[0]}, C={step[1]}), Boat={'Left' if step[2]==1 else 'Right'}")
+else:
+    print("No solution found.")
