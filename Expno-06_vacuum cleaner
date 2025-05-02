@@ -1,0 +1,29 @@
+def vacuum_world(state):
+    print(("lokesh 192211069"))
+    location, status_a, status_b = state
+
+    if location == 'A':
+        if status_a == 'Dirty':
+            status_a = 'Clean'
+            action = 'Suck in A'
+        else:
+            location = 'B'
+            action = 'Move to B'
+    elif location == 'B':
+        if status_b == 'Dirty':
+            status_b = 'Clean'
+            action = 'Suck in B'
+        else:
+            location = 'A'
+            action = 'Move to A'
+
+    return (location, status_a, status_b), action
+
+# Initial state: (Location, Room A, Room B)
+state = ('A', 'Dirty', 'Dirty')
+
+# Simulate steps
+for _ in range(4):
+    state, action = vacuum_world(state)
+    print("Action:", action)
+    print("State:", state)
