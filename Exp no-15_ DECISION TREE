@@ -1,0 +1,111 @@
+import math
+("lokesh 192211069")
+
+# Helper functions
+
+# Calculate the entropy of the dataset
+def entropy(data):
+    labels = [row[-1] for row in data]
+    unique_labels = set(labels)
+    entropy = 0
+    for label in unique_labels:
+        prob = labels.count(label) / len(labels)
+        entropy -= prob * math.log2(prob)
+    return entropy
+
+# Split the dataset by an attribute (feature)
+def split_data(data, attribute_index):
+    splits = {}
+    for row in data:
+        key = row[attribute_index]
+        if key not in splits:
+            splits[key] = []
+        splits[key].append(row)
+    return splits
+
+# Calculate Information Gain
+def information_gain(data, attribute_index):
+    original_entropy = entropy(data)
+    splits = split_data(data, attribute_index)
+    weighted_entropy = 0
+    for subset in splits.values():
+        weighted_entropy += len(subset) / len(data) * entropy(subset)
+    return original_entropy - weighted_entropy
+
+# Find the best attribute to split on (with maximum Information Gain)
+def best_attribute(data, attributes):
+    best_gain = -1
+    best_attribute = -1
+    for i in range(len(attributes)):
+        gain = information_gain(data, i)
+        if gain > best_gain:
+            best_gain = gain
+            best_attribute = i
+    return best_attribute
+
+# Recursive Decision Tree Algorithm
+def build_tree(data, attributes):
+    # If all examples have the same label, return the label
+    labels = [row[-1] for row in data]
+    if len(set(labels)) == 1:
+        return labels[0]
+    
+    # If no attributes left, return the most frequent label
+    if len(attributes) == 0:
+        return max(set(labels), key=labels.count)
+    
+    # Find the best attribute to split on
+    best_attr = best_attribute(data, attributes)
+    tree = {attributes[best_attr]: {}}
+    
+    # Split data on the best attribute
+    splits = split_data(data, best_attr)
+    new_attributes = attributes[:best_attr] + attributes[best_attr+1:]
+    
+    # Recursively build tree for each subset
+    for value, subset in splits.items():
+        tree[attributes[best_attr]][value] = build_tree(subset, new_attributes)
+    
+    return tree
+
+# Predict function (for a given test data row)
+def predict(tree, row):
+    if not isinstance(tree, dict):
+        return tree  # If it's a leaf node, return the label
+    
+    attribute = list(tree.keys())[0]
+    attribute_value = row[attribute]
+    
+    # If the attribute value exists in the tree, continue the search
+    if attribute_value in tree[attribute]:
+        return predict(tree[attribute][attribute_value], row)
+    else:
+        return None  # If the attribute value is not in the tree, return None
+
+# Example usage
+
+# Sample dataset: [attribute1, attribute2, ..., label]
+data = [
+    [1, "Sunny", "Yes"],
+    [2, "Overcast", "Yes"],
+    [3, "Rain", "No"],
+    [4, "Rain", "No"],
+    [5, "Sunny", "Yes"],
+    [6, "Sunny", "No"],
+    [7, "Overcast", "Yes"],
+    [8, "Overcast", "No"],
+    [9, "Rain", "Yes"],
+    [10, "Sunny", "Yes"]
+]
+
+# Attributes of the dataset
+attributes = [0, 1]  # Attribute 0 is "Temperature", Attribute 1 is "Outlook"
+
+# Build the decision tree
+tree = build_tree(data, attributes)
+print("Decision Tree:", tree)
+
+# Example prediction
+test_row = [5, "Sunny"]  # Test for "Sunny" temperature
+prediction = predict(tree, test_row)
+print("Prediction for test row:", prediction)
