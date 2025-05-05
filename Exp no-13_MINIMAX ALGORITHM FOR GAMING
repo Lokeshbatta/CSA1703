@@ -1,0 +1,101 @@
+# Tic Tac Toe using Minimax
+print("lokesh 192211069")
+# Initialize board
+board = [" " for _ in range(9)]
+
+# Print the board
+def print_board():
+    for i in range(0, 9, 3):
+        print(" | ".join(board[i:i+3]))
+        if i < 6:
+            print("--+---+--")
+
+# Check for winner
+def check_winner(brd, player):
+    wins = [(0,1,2), (3,4,5), (6,7,8),  # rows
+            (0,3,6), (1,4,7), (2,5,8),  # columns
+            (0,4,8), (2,4,6)]           # diagonals
+    return any(brd[a] == brd[b] == brd[c] == player for a,b,c in wins)
+
+# Check if board is full
+def is_full(brd):
+    return " " not in brd
+
+# Minimax algorithm
+def minimax(brd, is_maximizing):
+    if check_winner(brd, "O"):
+        return 1
+    if check_winner(brd, "X"):
+        return -1
+    if is_full(brd):
+        return 0
+
+    if is_maximizing:
+        best = -float('inf')
+        for i in range(9):
+            if brd[i] == " ":
+                brd[i] = "O"
+                score = minimax(brd, False)
+                brd[i] = " "
+                best = max(best, score)
+        return best
+    else:
+        best = float('inf')
+        for i in range(9):
+            if brd[i] == " ":
+                brd[i] = "X"
+                score = minimax(brd, True)
+                brd[i] = " "
+                best = min(best, score)
+        return best
+
+# Best move for AI
+def best_move():
+    best_score = -float('inf')
+    move = 0
+    for i in range(9):
+        if board[i] == " ":
+            board[i] = "O"
+            score = minimax(board, False)
+            board[i] = " "
+            if score > best_score:
+                best_score = score
+                move = i
+    board[move] = "O"
+
+# Main game loop
+def play_game():
+    print("Tic Tac Toe — You (X) vs AI (O)")
+    while True:
+        print_board()
+        try:
+            pos = int(input("Enter your move (0-8): "))
+            if board[pos] != " ":
+                print("Spot taken. Try again.")
+                continue
+            board[pos] = "X"
+        except:
+            print("Invalid input.")
+            continue
+
+        if check_winner(board, "X"):
+            print_board()
+            print("You win!")
+            break
+        if is_full(board):
+            print_board()
+            print("It's a draw!")
+            break
+
+        best_move()
+
+        if check_winner(board, "O"):
+            print_board()
+            print("AI wins!")
+            break
+        if is_full(board):
+            print_board()
+            print("It's a draw!")
+            break
+
+play_game()
