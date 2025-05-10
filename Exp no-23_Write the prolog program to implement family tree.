@@ -1,0 +1,70 @@
+% Facts: gender
+male(john).
+male(david).
+male(ryan).
+male(james).
+
+female(susan).
+female(mary).
+female(lisa).
+female(emma).
+
+% Facts: parent(Parent, Child)
+parent(john, david).
+parent(john, mary).
+parent(susan, david).
+parent(susan, mary).
+
+parent(david, ryan).
+parent(lisa, ryan).
+
+parent(mary, emma).
+parent(james, emma).
+
+% Rules:
+
+% father(Father, Child)
+father(F, C) :- parent(F, C), male(F).
+
+% mother(Mother, Child)
+mother(M, C) :- parent(M, C), female(M).
+
+% sibling(X, Y)
+sibling(X, Y) :-
+    parent(P, X),
+    parent(P, Y),
+    X \= Y.
+
+% brother(X, Y)
+brother(X, Y) :-
+    sibling(X, Y),
+    male(X).
+
+% sister(X, Y)
+sister(X, Y) :-
+    sibling(X, Y),
+    female(X).
+
+% grandparent(GP, C)
+grandparent(GP, C) :-
+    parent(GP, P),
+    parent(P, C).
+
+% grandfather(GF, C)
+grandfather(GF, C) :-
+    grandparent(GF, C),
+    male(GF).
+
+% grandmother(GM, C)
+grandmother(GM, C) :-
+    grandparent(GM, C),
+    female(GM).
+
+% Example: aunt/uncle
+aunt(A, C) :-
+    parent(P, C),
+    sister(A, P).
+
+uncle(U, C) :-
+    parent(P, C),
+    brother(U, P).
