@@ -1,0 +1,22 @@
+% bird(Name)
+bird(sparrow).
+bird(eagle).
+bird(penguin).
+bird(ostrich).
+bird(parrot).
+bird(bat).  % Optional: for fun, even though it's not a bird
+
+% cannot_fly(BirdName)
+cannot_fly(penguin).
+cannot_fly(ostrich).
+
+% can_fly(BirdName)
+can_fly(Bird) :-
+    bird(Bird),
+    \+ cannot_fly(Bird).
+
+% fly_status(Bird, Status)
+fly_status(Bird, can_fly) :-
+    can_fly(Bird), !.
+fly_status(Bird, cannot_fly) :-
+    bird(Bird).
