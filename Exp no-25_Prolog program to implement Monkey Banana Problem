@@ -1,0 +1,18 @@
+% monkey(State, Actions)
+% State: monkey(Position, BoxPosition, OnBox, HasBanana)
+
+monkey(state(middle, middle, yes, yes), []).
+
+monkey(state(_, Box, no, no), [go(middle), push(Box, middle), climb, grasp]) :-
+    !.
+
+% Solve and print
+solve :-
+    monkey(state(at_door, at_window, no, no), Actions),
+    write('Actions to get the banana:'), nl,
+    print_actions(Actions).
+
+print_actions([]).
+print_actions([A|T]) :-
+    write('- '), write(A), nl,
+    print_actions(T).
