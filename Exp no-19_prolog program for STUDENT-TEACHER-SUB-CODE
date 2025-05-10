@@ -1,0 +1,29 @@
+% student(Name, RollNo)
+student('Alice', 101).
+student('Bob', 102).
+student('Charlie', 103).
+
+% teacher(Name, TeacherID)
+teacher('Dr. Smith', t001).
+teacher('Prof. Jones', t002).
+
+% subject(SubjectName, SubjectCode, TeacherID)
+subject('Mathematics', 'MATH101', t001).
+subject('Physics', 'PHYS201', t002).
+
+% teaches(TeacherName, SubjectCode)
+teaches(TeacherName, SubjectCode) :-
+    teacher(TeacherName, TID),
+    subject(_, SubjectCode, TID).
+
+% enrolled(StudentName, SubjectCode)
+% (For simplicity, assume all students are enrolled in all subjects)
+enrolled(StudentName, SubjectCode) :-
+    student(StudentName, _),
+    subject(_, SubjectCode, _).
+
+% student_teacher(StudentName, TeacherName)
+% Finds the teacher of the subject the student is enrolled in
+student_teacher(StudentName, TeacherName) :-
+    enrolled(StudentName, SubjectCode),
+    teaches(TeacherName, SubjectCode).
