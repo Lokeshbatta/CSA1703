@@ -1,0 +1,23 @@
+% disease_diet(Disease, RecommendedFoods, AvoidFoods)
+
+disease_diet(diabetes,
+    [vegetables, whole_grains, lean_proteins, nuts],
+    [sugar, white_bread, soft_drinks, sweets]).
+
+disease_diet(hypertension,
+    [fruits, vegetables, low_fat_dairy, whole_grains],
+    [salt, processed_foods, red_meat, alcohol]).
+
+disease_diet(cholesterol,
+    [oats, barley, nuts, beans, fruits],
+    [fried_foods, red_meat, butter, cheese]).
+
+disease_diet(obesity,
+    [fruits, vegetables, lean_meats, whole_grains],
+    [sugary_drinks, junk_food, refined_carbs, fatty_meats]).
+
+% Rule to suggest diet based on disease
+suggest_diet(Disease) :-
+    disease_diet(Disease, ToEat, ToAvoid),
+    format('Recommended foods for ~w: ~w~n', [Disease, ToEat]),
+    format('Foods to avoid for ~w: ~w~n', [Disease, ToAvoid]).
