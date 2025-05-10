@@ -1,0 +1,17 @@
+% person(Name, DateOfBirth)
+% DateOfBirth is represented as dob(Year, Month, Day)
+
+person('Alice', dob(1990, 5, 21)).
+person('Bob', dob(1985, 12, 3)).
+person('Charlie', dob(2000, 7, 15)).
+person('Diana', dob(1995, 1, 10)).
+
+% Query example: Get DOB of a person
+% ?- person('Alice', DOB).
+
+% Query example: Find all people born in a specific year
+born_in_year(Year, Name) :-
+    person(Name, dob(Year, _, _)).
+
+% Example usage:
+% ?- born_in_year(1990, Name).
