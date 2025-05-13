@@ -1,0 +1,8 @@
+% Disease rules based on symptoms
+disease(flu) :- has(fever), has(cough), has(body_ache).
+disease(cold) :- has(cough), has(sneezing), has(runny_nose).
+disease(covid19) :- has(fever), has(cough), has(loss_of_taste_smell).
+disease(malaria) :- has(fever), has(chills), has(sweating).
+
+% Sample query to test:
+% ?- assert(has(fever)), assert(has(cough)), assert(has(loss_of_taste_smell)), disease(D).
